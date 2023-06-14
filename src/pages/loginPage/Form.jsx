@@ -20,7 +20,10 @@ const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
   email: yup.string().email("invalid email").required("required"),
-  password: yup.string().required("required"),
+  password: yup
+    .string()
+    .required("required")
+    .matches(/^(?=.*\d).+$/, "Password must contain at least one number"),
 });
 
 const loginSchema = yup.object().shape({

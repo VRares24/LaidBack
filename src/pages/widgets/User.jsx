@@ -27,11 +27,12 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector, useDispatch } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
-
   const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const { palette } = useTheme();
   const dispatch = useDispatch();
@@ -50,8 +51,27 @@ const UserWidget = ({ userId, picturePath }) => {
     setUser(data);
   };
 
-  const handleSearchInputChange = (event) => {
+  const handleSearchInputChange = async (event) => {
     setSearchValue(event.target.value);
+    await searchUsers(event.target.value);
+  };
+
+  const searchUsers = async (value) => {
+    if (value === "") {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const { data } = await axios.get(
+        `http://localhost:1001/search?query=${value}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setSearchResults(data.users); // Setează rezultatele căutării în variabila "searchResults"
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   useEffect(() => {
@@ -78,6 +98,10 @@ const UserWidget = ({ userId, picturePath }) => {
     dispatch(setLogout());
   };
 
+  const handleUserClick = (userId) => {
+    navigate(`/profile/${userId}`);
+  };
+
   return (
     <WidgetWrapper className="user-widget">
       {/* Search bar */}
@@ -98,6 +122,15 @@ const UserWidget = ({ userId, picturePath }) => {
           <Search />
         </IconButton>
       </Box>
+      {searchResults.map((user) => (
+        <div
+          key={user._id}
+          onClick={() => handleUserClick(user._id)}
+          style={{ cursor: "pointer" }}
+        >
+          {user.firstName} {user.lastName}
+        </div>
+      ))}
       <Box p="1rem 0">
         <FlexBetween gap="1rem">
           <IconButton onClick={() => dispatch(setMode())}>
@@ -132,7 +165,8 @@ const UserWidget = ({ userId, picturePath }) => {
       <FlexBetween
         gap="0.5rem"
         pb="1.1rem"
-        onClick={() => navigate(`/profile/${userId}`)}
+        onClick={() => handleUserClick(userId)}
+        style={{ cursor: "pointer" }}
       >
         <FlexBetween gap="1rem">
           <UserImage image={picturePath} />

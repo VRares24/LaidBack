@@ -6,7 +6,7 @@ const EventsWidget = () => {
   const dark = palette.neutral.dark;
   const main = palette.neutral.main;
 
-  // Un set de date exemplu pentru evenimente, în realitate ar trebui să provină dintr-un serviciu backend
+  // Un set de date exemplu pentru evenimente
   const upcomingEvents = [
     { title: "Examen de Licență", date: "27 Iunie, 2023" },
     { title: "Zi de naștere", date: "9 iulie, 2023" },
