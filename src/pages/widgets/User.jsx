@@ -43,7 +43,7 @@ const UserWidget = ({ userId, picturePath }) => {
   const main = palette.neutral.main;
 
   const getUser = async () => {
-    const response = await fetch(`http://localhost:1001/users/${userId}`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -63,7 +63,7 @@ const UserWidget = ({ userId, picturePath }) => {
     }
     try {
       const { data } = await axios.get(
-        `http://localhost:1001/search?query=${value}`,
+        `${process.env.REACT_APP_BACKEND_URL}/search?query=${value}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

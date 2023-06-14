@@ -58,7 +58,7 @@ const MyPostWidget = ({ picturePath }) => {
       formData.append("poll", JSON.stringify({ options: validPollOptions }));
     }
 
-    const response = await fetch(`http://localhost:1001/posts`, {
+    const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
@@ -88,7 +88,7 @@ const MyPostWidget = ({ picturePath }) => {
       <FlexBetween padding="1rem">
         <FlexBetween gap="1rem" alignItems="center">
           <img
-            src="http://localhost:1001/assets/Logo.png"
+            src={`${process.env.REACT_APP_BACKEND_URL}/assets/Logo.png`}
             alt="Logo"
             style={{ height: "3rem", width: "auto" }}
           />
